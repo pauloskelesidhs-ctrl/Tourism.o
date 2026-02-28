@@ -1,0 +1,10 @@
+[
+  {
+    "id": "sample_ramp_01",
+    "type": "ramp",
+    "name": "Wheelchair ramp (sample)",
+    "lat": 40.6401,
+    "lon": 22.9444,
+    "notes": "Replace with real ramp coordinates when you have them."
+  }
+]
