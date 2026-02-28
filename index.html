@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Tourist Greece</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Leaflet for the mini map (only opens when user taps “Map”) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__title">Tourist Greece</div>
+    <div class="topbar__subtitle" id="subtitle">Local-only guide</div>
+  </header>
+
+  <main class="container">
+    <!-- Permissions / status -->
+    <section class="panel" id="statusPanel">
+      <div class="row">
+        <div>
+          <div class="h">Your area</div>
+          <div class="p" id="locText">Location not set yet.</div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="btnLocation">Enable Location</button>
+          <button class="btn" id="btnNotify">Enable Alerts</button>
+        </div>
+      </div>
+      <div class="p small">
+        Tip: Add to Home Screen for an app-like experience (Safari → Share → Add to Home Screen).
+      </div>
+    </section>
+
+    <!-- HOME MENU (cards) -->
+    <section class="grid" id="homeMenu">
+      <button class="card" data-view="partyBeaches">
+        <div class="card__icon">🏖️🍹</div>
+        <div class="card__title">Party Beaches Near Me</div>
+        <div class="card__sub">Best beaches + beach bars</div>
+        <div class="card__badge" id="badgePartyBeaches">—</div>
+      </button>
+
+      <button class="card" data-view="beachBars">
+        <div class="card__icon">🍸</div>
+        <div class="card__title">Beach Bars Near Me</div>
+        <div class="card__sub">Closest beach bars</div>
+        <div class="card__badge" id="badgeBeachBars">—</div>
+      </button>
+
+      <button class="card" data-view="clubs">
+        <div class="card__icon">🎧</div>
+        <div class="card__title">Clubs Near Me</div>
+        <div class="card__sub">Nightlife spots</div>
+        <div class="card__badge" id="badgeClubs">—</div>
+      </button>
+
+      <button class="card" data-view="essentials">
+        <div class="card__icon">🧳</div>
+        <div class="card__title">Essentials</div>
+        <div class="card__sub">ATM • Markets • Hotels • Car rental</div>
+        <div class="card__badge" id="badgeEssentials">—</div>
+      </button>
+
+      <button class="card" data-view="health">
+        <div class="card__icon">🏥💊</div>
+        <div class="card__title">Health & Safety</div>
+        <div class="card__sub">Hospitals • Doctors • Pharmacies</div>
+        <div class="card__badge" id="badgeHealth">—</div>
+      </button>
+
+      <button class="card" data-view="access">
+        <div class="card__icon">♿️</div>
+        <div class="card__title">Accessibility</div>
+        <div class="card__sub">Ramps • Accessible points</div>
+        <div class="card__badge" id="badgeAccess">—</div>
+      </button>
+    </section>
+
+    <!-- LIST VIEW -->
+    <section class="panel hidden" id="listPanel">
+      <div class="row">
+        <div>
+          <div class="h" id="listTitle">List</div>
+          <div class="p small" id="listHint">Showing places near you only.</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnBack">Back</button>
+          <button class="btn primary" id="btnRefresh">Refresh</button>
+        </div>
+      </div>
+
+      <div class="filters" id="filters"></div>
+
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- DETAILS VIEW -->
+    <section class="panel hidden" id="detailPanel">
+      <div class="row">
+        <div>
+          <div class="h" id="detailTitle">Title</div>
+          <div class="p" id="detailMeta">Meta</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnDetailBack">Back</button>
+        </div>
+      </div>
+
+      <div class="detailActions">
+        <button class="btn primary" id="btnNavigate">Navigate (Apple Maps)</button>
+        <button class="btn" id="btnShowMap">Open Mini Map</button>
+      </div>
+
+      <div class="p small" id="detailNote"></div>
+
+      <div class="mapWrap hidden" id="mapWrap">
+        <div id="map"></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
