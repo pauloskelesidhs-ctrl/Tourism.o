@@ -6,83 +6,135 @@
   <meta name="theme-color" content="#0b1220" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <title>Tourist Greece</title>
+  <title>tourism.o</title>
 
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Leaflet for the mini map (only opens when user taps “Map”) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <script defer src="app.js"></script>
 </head>
 <body>
   <header class="topbar">
-    <div class="topbar__title">Tourist Greece</div>
-    <div class="topbar__subtitle" id="subtitle">Local-only guide</div>
+    <div class="topbar__title">tourism.o</div>
+    <div class="topbar__subtitle" id="subtitle">Search a location</div>
   </header>
 
   <main class="container">
-    <!-- Permissions / status -->
-    <section class="panel" id="statusPanel">
-      <div class="row">
-        <div>
-          <div class="h">Your area</div>
-          <div class="p" id="locText">Location not set yet.</div>
-        </div>
-        <div class="actions">
-          <button class="btn primary" id="btnLocation">Enable Location</button>
-          <button class="btn" id="btnNotify">Enable Alerts</button>
-        </div>
+
+    <!-- SEARCH FIRST -->
+    <section class="panel" id="searchPanel">
+      <div class="h">Where are you going?</div>
+      <div class="p small">Type a location in Greece. Then you’ll get a local menu for that place.</div>
+
+      <div class="searchRow">
+        <input id="placeQuery" class="searchInput" placeholder="e.g. Mykonos, Paros Port, Thessaloniki…" />
+        <button class="btn primary" id="btnPlaceSearch">Search</button>
+        <button class="btn" id="btnUseMyLocation">Use my location</button>
       </div>
-      <div class="p small">
-        Tip: Add to Home Screen for an app-like experience (Safari → Share → Add to Home Screen).
-      </div>
+
+      <div class="p small" id="placeStatus"></div>
+      <div class="list hidden" id="placeResults"></div>
     </section>
 
-    <!-- HOME MENU (cards) -->
-    <section class="grid" id="homeMenu">
-      <button class="card" data-view="partyBeaches">
-        <div class="card__icon">🏖️🍹</div>
-        <div class="card__title">Party Beaches Near Me</div>
-        <div class="card__sub">Best beaches + beach bars</div>
-        <div class="card__badge" id="badgePartyBeaches">—</div>
-      </button>
+    <!-- MENU (hidden until location chosen) -->
+    <section class="panel hidden" id="menuPanel">
+      <div class="row">
+        <div>
+          <div class="h" id="menuTitle">Menu</div>
+          <div class="p small" id="menuHint">Choose a category (local-only).</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnChangePlace">Change location</button>
+        </div>
+      </div>
 
-      <button class="card" data-view="beachBars">
-        <div class="card__icon">🍸</div>
-        <div class="card__title">Beach Bars Near Me</div>
-        <div class="card__sub">Closest beach bars</div>
-        <div class="card__badge" id="badgeBeachBars">—</div>
-      </button>
+      <div class="searchRow" style="margin-top:10px;">
+        <input id="quickSearch" class="searchInput" placeholder="Search: hotel, atm, coffee, club, pharmacy…" />
+        <button class="btn primary" id="btnGo">Go</button>
+      </div>
+      <div class="p small" id="searchHelp"></div>
 
-      <button class="card" data-view="clubs">
-        <div class="card__icon">🎧</div>
-        <div class="card__title">Clubs Near Me</div>
-        <div class="card__sub">Nightlife spots</div>
-        <div class="card__badge" id="badgeClubs">—</div>
-      </button>
+      <div class="h" style="margin-top:12px;">Stay</div>
+      <section class="grid" style="margin-top:10px;">
+        <button class="card" data-view="stay">
+          <div class="card__icon">🏨</div>
+          <div class="card__title">Hotels & Stays</div>
+          <div class="card__sub">Hotels + apartments + guesthouses</div>
+          <div class="card__badge" id="badgeStay">—</div>
+        </button>
+      </section>
 
-      <button class="card" data-view="essentials">
-        <div class="card__icon">🧳</div>
-        <div class="card__title">Essentials</div>
-        <div class="card__sub">ATM • Markets • Hotels • Car rental</div>
-        <div class="card__badge" id="badgeEssentials">—</div>
-      </button>
+      <div class="h" style="margin-top:14px;">Essentials</div>
+      <section class="grid" style="margin-top:10px;">
+        <button class="card" data-view="essentials">
+          <div class="card__icon">🧳</div>
+          <div class="card__title">Essentials</div>
+          <div class="card__sub">ATM • Markets • Car rental</div>
+          <div class="card__badge" id="badgeEssentials">—</div>
+        </button>
+      </section>
 
-      <button class="card" data-view="health">
-        <div class="card__icon">🏥💊</div>
-        <div class="card__title">Health & Safety</div>
-        <div class="card__sub">Hospitals • Doctors • Pharmacies</div>
-        <div class="card__badge" id="badgeHealth">—</div>
-      </button>
+      <div class="h" style="margin-top:14px;">Entertainment</div>
+      <section class="grid" style="margin-top:10px;">
+        <button class="card" data-view="partyBeaches">
+          <div class="card__icon">🏖️🍹</div>
+          <div class="card__title">Party Beaches</div>
+          <div class="card__sub">Vibe + price + beach bars</div>
+          <div class="card__badge" id="badgePartyBeaches">—</div>
+        </button>
 
-      <button class="card" data-view="access">
-        <div class="card__icon">♿️</div>
-        <div class="card__title">Accessibility</div>
-        <div class="card__sub">Ramps • Accessible points</div>
-        <div class="card__badge" id="badgeAccess">—</div>
-      </button>
+        <button class="card" data-view="beachBars">
+          <div class="card__icon">🍸</div>
+          <div class="card__title">Beach Bars</div>
+          <div class="card__sub">Bars & hotspots</div>
+          <div class="card__badge" id="badgeBeachBars">—</div>
+        </button>
+
+        <button class="card" data-view="clubs">
+          <div class="card__icon">🎧</div>
+          <div class="card__title">Clubs</div>
+          <div class="card__sub">Nightlife nearby</div>
+          <div class="card__badge" id="badgeClubs">—</div>
+        </button>
+
+        <button class="card" data-view="coffee">
+          <div class="card__icon">☕</div>
+          <div class="card__title">Coffee</div>
+          <div class="card__sub">Cafés near you</div>
+          <div class="card__badge" id="badgeCoffee">—</div>
+        </button>
+      </section>
+
+      <div class="h" style="margin-top:14px;">Safety</div>
+      <section class="grid" style="margin-top:10px;">
+        <button class="card" data-view="health">
+          <div class="card__icon">🏥💊</div>
+          <div class="card__title">Health & Safety</div>
+          <div class="card__sub">Hospitals • Doctors • Pharmacies</div>
+          <div class="card__badge" id="badgeHealth">—</div>
+        </button>
+
+        <button class="card" data-view="onduty">
+          <div class="card__icon">💊🌙</div>
+          <div class="card__title">On-duty Pharmacy</div>
+          <div class="card__sub">εφημερεύοντα κοντά σου</div>
+          <div class="card__badge" id="badgeOnDuty">↗</div>
+        </button>
+
+        <button class="card" data-view="emergency">
+          <div class="card__icon">🚨</div>
+          <div class="card__title">Emergency Mode</div>
+          <div class="card__sub">112 + nearest hospital</div>
+          <div class="card__badge" id="badgeEmergency">—</div>
+        </button>
+
+        <button class="card" data-view="access">
+          <div class="card__icon">♿️</div>
+          <div class="card__title">Accessibility</div>
+          <div class="card__sub">Ramps • Accessible points</div>
+          <div class="card__badge" id="badgeAccess">—</div>
+        </button>
+      </section>
     </section>
 
     <!-- LIST VIEW -->
@@ -90,16 +142,14 @@
       <div class="row">
         <div>
           <div class="h" id="listTitle">List</div>
-          <div class="p small" id="listHint">Showing places near you only.</div>
+          <div class="p small" id="listHint">Local-only results.</div>
         </div>
         <div class="actions">
           <button class="btn" id="btnBack">Back</button>
           <button class="btn primary" id="btnRefresh">Refresh</button>
         </div>
       </div>
-
       <div class="filters" id="filters"></div>
-
       <div class="list" id="list"></div>
     </section>
 
@@ -116,8 +166,13 @@
       </div>
 
       <div class="detailActions">
+        <a class="btn primary" id="btnCall112" href="tel:112" style="text-decoration:none;">Call 112</a>
         <button class="btn primary" id="btnNavigate">Navigate (Apple Maps)</button>
         <button class="btn" id="btnShowMap">Open Mini Map</button>
+      </div>
+
+      <div class="detailActions" style="margin-top:10px;">
+        <a class="btn" id="btnCallPlace" href="#" style="text-decoration:none; display:none;">Call this place</a>
       </div>
 
       <div class="p small" id="detailNote"></div>
@@ -129,3 +184,5 @@
   </main>
 </body>
 </html>
+
+
