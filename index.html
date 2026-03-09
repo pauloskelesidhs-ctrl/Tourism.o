@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#0b1220" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <title>Tourist Greece</title>
+  <title>tourism.o</title>
 
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Leaflet for the mini map (only opens when user taps “Map”) -->
+  <!-- Leaflet for mini map (details page) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -18,12 +18,12 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="topbar__title">Tourist Greece</div>
+    <div class="topbar__title">tourism.o</div>
     <div class="topbar__subtitle" id="subtitle">Local-only guide</div>
   </header>
 
   <main class="container">
-    <!-- Permissions / status -->
+    <!-- Location -->
     <section class="panel" id="statusPanel">
       <div class="row">
         <div>
@@ -40,27 +40,45 @@
       </div>
     </section>
 
+    <!-- QUICK SEARCH (between location and sectors) -->
+    <section class="panel">
+      <div class="h">Quick search</div>
+      <div class="p small">Type what you need (e.g. “coffee”, “pharmacy”, “ATM”, “club”, “hospital”).</div>
+      <div class="searchRow">
+        <input id="quickSearch" class="searchInput" placeholder="Search what you need…" />
+        <button class="btn primary" id="btnGo">Go</button>
+      </div>
+      <div class="p small" id="searchHelp"></div>
+    </section>
+
     <!-- HOME MENU (cards) -->
     <section class="grid" id="homeMenu">
       <button class="card" data-view="partyBeaches">
         <div class="card__icon">🏖️🍹</div>
-        <div class="card__title">Party Beaches Near Me</div>
-        <div class="card__sub">Best beaches + beach bars</div>
+        <div class="card__title">Party Beaches</div>
+        <div class="card__sub">Vibe + price + beach bars</div>
         <div class="card__badge" id="badgePartyBeaches">—</div>
       </button>
 
       <button class="card" data-view="beachBars">
         <div class="card__icon">🍸</div>
-        <div class="card__title">Beach Bars Near Me</div>
-        <div class="card__sub">Closest beach bars</div>
+        <div class="card__title">Beach Bars</div>
+        <div class="card__sub">Bars & hotspots</div>
         <div class="card__badge" id="badgeBeachBars">—</div>
       </button>
 
       <button class="card" data-view="clubs">
         <div class="card__icon">🎧</div>
-        <div class="card__title">Clubs Near Me</div>
-        <div class="card__sub">Nightlife spots</div>
+        <div class="card__title">Clubs</div>
+        <div class="card__sub">Nightlife nearby</div>
         <div class="card__badge" id="badgeClubs">—</div>
+      </button>
+
+      <button class="card" data-view="coffee">
+        <div class="card__icon">☕</div>
+        <div class="card__title">Coffee</div>
+        <div class="card__sub">Cafés near you</div>
+        <div class="card__badge" id="badgeCoffee">—</div>
       </button>
 
       <button class="card" data-view="essentials">
@@ -75,6 +93,20 @@
         <div class="card__title">Health & Safety</div>
         <div class="card__sub">Hospitals • Doctors • Pharmacies</div>
         <div class="card__badge" id="badgeHealth">—</div>
+      </button>
+
+      <button class="card" data-view="onduty">
+        <div class="card__icon">💊🌙</div>
+        <div class="card__title">On-duty Pharmacy</div>
+        <div class="card__sub">εφημερεύοντα κοντά σου</div>
+        <div class="card__badge" id="badgeOnDuty">—</div>
+      </button>
+
+      <button class="card" data-view="emergency">
+        <div class="card__icon">🚨</div>
+        <div class="card__title">Emergency Mode</div>
+        <div class="card__sub">112 + nearest hospital</div>
+        <div class="card__badge" id="badgeEmergency">—</div>
       </button>
 
       <button class="card" data-view="access">
@@ -99,7 +131,6 @@
       </div>
 
       <div class="filters" id="filters"></div>
-
       <div class="list" id="list"></div>
     </section>
 
@@ -122,6 +153,18 @@
 
       <div class="p small" id="detailNote"></div>
 
+      <!-- PRICE TRUTH (for party beaches, also shown as editable) -->
+      <div class="panel hidden" id="priceTruthPanel" style="margin-top:12px;">
+        <div class="h">Price truth</div>
+        <div class="p small">What did you pay? (Saved on your device)</div>
+        <div class="searchRow">
+          <input id="sunbedsInput" class="searchInput" placeholder="Sunbeds price (e.g. €40–€80)" />
+          <input id="minSpendInput" class="searchInput" placeholder="Min spend (e.g. €80 pp)" />
+          <button class="btn primary" id="btnSaveTruth">Save</button>
+        </div>
+        <div class="p small" id="truthSaved"></div>
+      </div>
+
       <div class="mapWrap hidden" id="mapWrap">
         <div id="map"></div>
       </div>
@@ -129,3 +172,4 @@
   </main>
 </body>
 </html>
+
