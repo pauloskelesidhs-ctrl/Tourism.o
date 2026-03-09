@@ -1,4 +1,4 @@
-const CACHE = "tg-shell-v1";
+const CACHE = "tg-shell-v3";
 const SHELL = [
   "./",
   "./index.html",
